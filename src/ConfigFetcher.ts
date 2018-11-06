@@ -21,53 +21,24 @@ export class HttpConfigFetcher implements IConfigFetcher {
 
     fetchLogic(lastProjectConfig: ProjectConfig, callback: (newProjectConfig: ProjectConfig) => void): void {
 
-        // tslint:disable-next-line:typedef
-        var options = {
-            url: this.url,
-            headers: {
-                "User-Agent": "ConfigCat-node/" + this.productVersion,
-                "X-ConfigCat-UserAgent": "ConfigCat-node/" + this.productVersion,
-                "If-None-Match": lastProjectConfig ? lastProjectConfig.HttpETag : null
+        const httpRequest = new XMLHttpRequest();
+        httpRequest.onreadystatechange = function() {
+            if (httpRequest.readyState == 4) {
+                if (httpRequest.status === 200) {
+                    callback(new ProjectConfig(new Date().getTime(), httpRequest.responseText, httpRequest.response.headers.etag));
+                } else if (httpRequest.status === 304) {
+                    callback(new ProjectConfig(new Date().getTime(), lastProjectConfig.JSONConfig, httpRequest.response.headers.etag));
+                } else {
+                    console.log("ConfigCat HTTPRequest error: " + httpRequest.statusText);
+                    callback(lastProjectConfig);
+                }
             }
         };
 
-        var httpClient = function() {
-            this.get = function(aUrl, aCallback) {
-                var anHttpRequest = new XMLHttpRequest();
-                anHttpRequest.onreadystatechange = function() {
-                    if (anHttpRequest.readyState == 4 && anHttpRequest.status == 200)
-                        aCallback(anHttpRequest.responseText);
-                };
-
-                anHttpRequest.open( "GET", aUrl, true );
-                anHttpRequest.send( null );
-            }
-        };
-
-        var client = new httpClient();
-        client.get(this.url, (response) => {
-            callback(new ProjectConfig(new Date().getTime(), response, response.headers.etag));
-        });
-
-        // httprequest(options, (err, response, body) => {
-        //
-        //     if (!err && response.statusCode === 304) {
-        //
-        //         callback(new ProjectConfig(new Date().getTime(), lastProjectConfig.JSONConfig, response.headers.etag));
-        //
-        //     } else if (!err && response.statusCode === 200) {
-        //
-        //         callback(new ProjectConfig(new Date().getTime(), body, response.headers.etag));
-        //
-        //     } else {
-        //
-        //         if (err) {
-        //             this.logger.error("httprequest error - " + err);
-        //         }
-        //
-        //         callback(lastProjectConfig);
-        //     }
-        // });
+        httpRequest.open( "GET", this.url, true );
+        httpRequest.setRequestHeader("X-ConfigCat-UserAgent", "ConfigCat-node/" + this.productVersion);
+        httpRequest.setRequestHeader("If-None-Match", lastProjectConfig ? lastProjectConfig.HttpETag : null);
+        httpRequest.send( null );
     }
 
 
