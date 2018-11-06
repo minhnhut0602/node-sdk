@@ -24,10 +24,11 @@ export class HttpConfigFetcher implements IConfigFetcher {
         const httpRequest = new XMLHttpRequest();
         httpRequest.onreadystatechange = function() {
             if (httpRequest.readyState == 4) {
+                const etag = httpRequest.getResponseHeader("ETag");
                 if (httpRequest.status === 200) {
-                    callback(new ProjectConfig(new Date().getTime(), httpRequest.responseText, httpRequest.response.headers.etag));
+                    callback(new ProjectConfig(new Date().getTime(), httpRequest.responseText, etag));
                 } else if (httpRequest.status === 304) {
-                    callback(new ProjectConfig(new Date().getTime(), lastProjectConfig.JSONConfig, httpRequest.response.headers.etag));
+                    callback(new ProjectConfig(new Date().getTime(), lastProjectConfig.JSONConfig, etag));
                 } else {
                     console.log("ConfigCat HTTPRequest error: " + httpRequest.statusText);
                     callback(lastProjectConfig);
