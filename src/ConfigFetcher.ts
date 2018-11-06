@@ -1,4 +1,3 @@
-import * as httprequest from "request";
 import * as winston from "winston";
 import { ProjectConfig } from "./ProjectConfigService";
 
@@ -32,26 +31,46 @@ export class HttpConfigFetcher implements IConfigFetcher {
             }
         };
 
-        httprequest(options, (err, response, body) => {
+        var httpClient = function() {
+            this.get = function(aUrl, aCallback) {
+                var anHttpRequest = new XMLHttpRequest();
+                anHttpRequest.onreadystatechange = function() {
+                    if (anHttpRequest.readyState == 4 && anHttpRequest.status == 200)
+                        aCallback(anHttpRequest.responseText);
+                };
 
-            if (!err && response.statusCode === 304) {
-
-                callback(new ProjectConfig(new Date().getTime(), lastProjectConfig.JSONConfig, response.headers.etag));
-
-            } else if (!err && response.statusCode === 200) {
-
-                callback(new ProjectConfig(new Date().getTime(), body, response.headers.etag));
-
-            } else {
-
-                if (err) {
-                    this.logger.error("httprequest error - " + err);
-                }
-
-                callback(lastProjectConfig);
+                anHttpRequest.open( "GET", aUrl, true );
+                anHttpRequest.send( null );
             }
+        };
+
+        var client = new httpClient();
+        client.get(this.url, (response) => {
+            callback(new ProjectConfig(new Date().getTime(), response, response.headers.etag));
         });
+
+        // httprequest(options, (err, response, body) => {
+        //
+        //     if (!err && response.statusCode === 304) {
+        //
+        //         callback(new ProjectConfig(new Date().getTime(), lastProjectConfig.JSONConfig, response.headers.etag));
+        //
+        //     } else if (!err && response.statusCode === 200) {
+        //
+        //         callback(new ProjectConfig(new Date().getTime(), body, response.headers.etag));
+        //
+        //     } else {
+        //
+        //         if (err) {
+        //             this.logger.error("httprequest error - " + err);
+        //         }
+        //
+        //         callback(lastProjectConfig);
+        //     }
+        // });
     }
+
+
 }
 
 export default IConfigFetcher;
