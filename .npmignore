@@ -1,7 +1,7 @@
 .vscode/
 node_modules/
 src/
-sample/
+samples/
 tests/
 coverage/
 gulpfile.js
@@ -10,3 +10,6 @@ tsconfig.json
 .gitignore
 .travis.yml
 *.tgz
+.idea/
+.nyc_output/
+*.log

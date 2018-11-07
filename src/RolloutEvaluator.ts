@@ -1,6 +1,5 @@
 import { ProjectConfig } from "./ProjectConfigService";
-import * as nodesha1 from "node-sha1";
-import * as bigInt from "big-integer";
+import * as sha1 from "js-sha1";
 
 export interface IRolloutEvaluator {
     Evaluate(config: ProjectConfig, key: string, defaultValue: any, User: User): any;
@@ -29,7 +28,7 @@ export class User {
 export class RolloutEvaluator implements IRolloutEvaluator {
 
     constructor() {}
-
+    
     Evaluate(config: ProjectConfig, key: string, defaultValue: any, User: User): any {
 
         if (!config || !config.JSONConfig) {
@@ -40,6 +39,7 @@ export class RolloutEvaluator implements IRolloutEvaluator {
         let json: any = JSON.parse(config.JSONConfig);
 
         if (!json[key]) {
+
             return defaultValue;
         }
 
@@ -127,8 +127,8 @@ export class RolloutEvaluator implements IRolloutEvaluator {
         if (rolloutPercentageItems && rolloutPercentageItems.length > 0) {
 
             let hashCandidate: string = key + User.identifier;
-            let hashValue: any = nodesha1(hashCandidate).substring(0, 15);
-            let hashScale: number = bigInt(hashValue, 16).mod(100).toJSNumber();
+            let hashValue: any = sha1(hashCandidate).substring(0, 12);
+            let hashScale: number = parseInt(hashValue, 16) % 100;
             let bucket: number = 0;
 
             for (let i: number = 0; i < rolloutPercentageItems.length; i++) {

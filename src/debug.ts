@@ -1,6 +1,5 @@
 import { RolloutEvaluator, User } from "./RolloutEvaluator";
 import { ProjectConfig } from "./ProjectConfigService";
-import * as bigInt from "big-integer";
 import { IConfigCatClient, ConfigCatClientImpl } from "./ConfigCatClientImpl";
 
 class Startup {
