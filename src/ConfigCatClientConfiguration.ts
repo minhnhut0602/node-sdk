@@ -1,23 +1,10 @@
-import * as winston from "winston";
 import * as EventEmitter from "events";
 
 export abstract class ConfigurationBase {
 
-    logger: winston.LoggerInstance;
+    constructor() {}
 
-    constructor() {
-        this.logger = new winston.Logger({
-            level: "error",
-            transports: []
-        });
-    }
-
-    protected validate(): void {
-
-        if (!this.logger) {
-            throw new Error("Invalid 'logger' instance");
-        }
-    }
+    protected validate(): void {}
 
     getUrl(apiKey: string): string {
         if (apiKey) {

@@ -1,7 +1,6 @@
 import { ConfigCatClientImpl, IConfigCatClient } from "./ConfigCatClientImpl";
 import { AutoPollConfiguration, ManualPollConfiguration, LazyLoadConfiguration } from "./ConfigCatClientConfiguration";
 import { EventEmitter } from "events";
-import * as winston from "winston";
 
 /** Create an instance of ConfigCatClient and setup AutoPool mode with default settings */
 export function createClient(apiKey: string): IConfigCatClient {
@@ -29,10 +28,6 @@ export function createClientWithAutoPoll(apiKey: string, config?: IConfiguration
         c.configChanged = config.configChanged;
     }
 
-    if (config && config.logger) {
-        c.logger = config.logger;
-    }
-
     var result: ConfigCatClientImpl = new ConfigCatClientImpl(apiKey, c);
 
     return result;
@@ -46,10 +41,6 @@ export function createClientWithAutoPoll(apiKey: string, config?: IConfiguration
 export function createClientWithManualPoll(apiKey: string, config?: IConfigurationOptions): IConfigCatClient {
 
     let c: ManualPollConfiguration = new ManualPollConfiguration();
-
-    if (config && config.logger) {
-        c.logger = config.logger;
-    }
 
     var result: ConfigCatClientImpl = new ConfigCatClientImpl(apiKey, c);
 
@@ -65,10 +56,6 @@ export function createClientWithLazyLoad(apiKey: string, config?: IConfiguration
 
     let c: LazyLoadConfiguration = new LazyLoadConfiguration();
 
-    if (config && config.logger) {
-        c.logger = config.logger;
-    }
-
     if (config && config.cacheTimeToLiveSeconds) {
         c.cacheTimeToLiveSeconds = config.cacheTimeToLiveSeconds;
     }
@@ -79,8 +66,6 @@ export function createClientWithLazyLoad(apiKey: string, config?: IConfiguration
 }
 
 export interface IConfigurationOptions {
-
-    logger?: winston.LoggerInstance;
 
     pollIntervalSeconds?: number;
 

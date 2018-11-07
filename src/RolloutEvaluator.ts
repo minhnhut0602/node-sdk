@@ -1,5 +1,4 @@
 import { ProjectConfig } from "./ProjectConfigService";
-import * as winston from "winston";
 import * as nodesha1 from "node-sha1";
 import * as bigInt from "big-integer";
 
@@ -29,17 +28,11 @@ export class User {
 
 export class RolloutEvaluator implements IRolloutEvaluator {
 
-    private logger: winston.LoggerInstance;
-
-    constructor(logger: winston.LoggerInstance) {
-        this.logger = logger;
-    }
+    constructor() {}
 
     Evaluate(config: ProjectConfig, key: string, defaultValue: any, User: User): any {
 
         if (!config || !config.JSONConfig) {
-
-            this.logger.warn("JSONConfig is not present, returning defaultValue");
 
             return defaultValue;
         }
@@ -47,9 +40,6 @@ export class RolloutEvaluator implements IRolloutEvaluator {
         let json: any = JSON.parse(config.JSONConfig);
 
         if (!json[key]) {
-
-            this.logger.warn("Unknown key: '" + key + "'");
-
             return defaultValue;
         }
 

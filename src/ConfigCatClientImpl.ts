@@ -45,22 +45,22 @@ export class ConfigCatClientImpl implements IConfigCatClient {
             let lc: LazyLoadConfiguration = <LazyLoadConfiguration>configuration;
 
             this.configService = new LazyLoadConfigSerivce(
-                configFetcher ? configFetcher : new HttpConfigFetcher(lc.getUrl(apiKey), "l-" + VERSION, lc.logger),
+                configFetcher ? configFetcher : new HttpConfigFetcher(lc.getUrl(apiKey), "l-" + VERSION),
                 cache ? cache : new InMemoryCache(),
                 lc);
 
-            this.evaluator = new RolloutEvaluator(lc.logger);
+            this.evaluator = new RolloutEvaluator();
 
         } else if (configuration && configuration instanceof ManualPollConfiguration) {
 
             let mc: ManualPollConfiguration = <ManualPollConfiguration>configuration;
 
             this.configService = new ManualPollService(
-                configFetcher ? configFetcher : new HttpConfigFetcher(mc.getUrl(apiKey), "m-" + VERSION, mc.logger),
+                configFetcher ? configFetcher : new HttpConfigFetcher(mc.getUrl(apiKey), "m-" + VERSION),
                 cache ? cache : new InMemoryCache(),
                 mc);
 
-            this.evaluator = new RolloutEvaluator(mc.logger);
+            this.evaluator = new RolloutEvaluator();
 
         } else {
 
@@ -71,13 +71,13 @@ export class ConfigCatClientImpl implements IConfigCatClient {
             }
 
             let autoConfigService: AutoPollConfigService = new AutoPollConfigService(
-                configFetcher ? configFetcher : new HttpConfigFetcher(ac.getUrl(apiKey), "a-" + VERSION, ac.logger),
+                configFetcher ? configFetcher : new HttpConfigFetcher(ac.getUrl(apiKey), "a-" + VERSION),
                 cache ? cache : new InMemoryCache(),
                 ac);
 
             this.configService = autoConfigService;
 
-            this.evaluator = new RolloutEvaluator(ac.logger);
+            this.evaluator = new RolloutEvaluator();
         }
     }
 

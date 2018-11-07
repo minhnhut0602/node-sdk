@@ -3,7 +3,6 @@ import "mocha";
 import { RolloutEvaluator, User } from "../src/RolloutEvaluator";
 import { ProjectConfig } from "../src/ProjectConfigService";
 import * as fs from "fs";
-import * as winston from "winston";
 
 describe("MatrixTests", () => {
 
@@ -11,13 +10,7 @@ describe("MatrixTests", () => {
     const CONFIG: ProjectConfig = new ProjectConfig(0, sample_v2, null);
     const testmatrix: string[] = require("fs").readFileSync("tests/testmatrix.csv").toString().split("\r\n");
 
-    var logger: winston.LoggerInstance = new winston.Logger({
-        level: "info",
-        transports: [
-            new winston.transports.Console({ timestamp: true })
-        ]});
-
-    let evaluator: RolloutEvaluator = new RolloutEvaluator(logger);
+    let evaluator: RolloutEvaluator = new RolloutEvaluator();
 
     it("GetValue", (done) => {
 

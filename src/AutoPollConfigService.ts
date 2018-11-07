@@ -25,9 +25,6 @@ export class AutoPollConfigService extends ConfigServiceBase implements IConfigS
         this.timer = setInterval(() => this.refreshConfig(), autoPollConfig.pollIntervalSeconds * 1000);
         this.maxInitWaitExpire = new Date(new Date().getTime() + autoPollConfig.maxInitWaitTimeSeconds * 1000);
         this.configChanged = autoPollConfig.configChanged;
-
-        this.logger.debug("autoPollConfig.maxInitWaitTimeSeconds - " + autoPollConfig.maxInitWaitTimeSeconds);
-        this.logger.debug("autoPollConfig.pollIntervalSeconds - " + autoPollConfig.pollIntervalSeconds);
     }
 
     getConfig(callback: (value: ProjectConfig) => void): void {
@@ -35,8 +32,6 @@ export class AutoPollConfigService extends ConfigServiceBase implements IConfigS
         var p: ProjectConfig = this.cache.Get();
 
         if (!p && new Date().getTime() < this.maxInitWaitExpire.getTime()) {
-
-            this.logger.debug("wait initailization");
 
             this.refreshLogic(callback);
 
@@ -51,7 +46,7 @@ export class AutoPollConfigService extends ConfigServiceBase implements IConfigS
     }
 
     private refreshLogic(callback?: (value: ProjectConfig) => void): void {
-        this.logger.debug("refreshLogic start");
+
 
         let p: ProjectConfig = this.cache.Get();
 

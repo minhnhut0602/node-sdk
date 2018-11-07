@@ -1,4 +1,3 @@
-import * as winston from "winston";
 import { ProjectConfig } from "./ProjectConfigService";
 
 declare const Promise: any;
@@ -11,12 +10,10 @@ export class HttpConfigFetcher implements IConfigFetcher {
 
     url: string;
     productVersion: string;
-    logger: any;
 
-    constructor(url: string, productVersion: string, logger?: winston.LoggerInstance) {
+    constructor(url: string, productVersion: string) {
         this.url = url;
         this.productVersion = productVersion;
-        this.logger = logger ? logger : winston;
     }
 
     fetchLogic(lastProjectConfig: ProjectConfig, callback: (newProjectConfig: ProjectConfig) => void): void {

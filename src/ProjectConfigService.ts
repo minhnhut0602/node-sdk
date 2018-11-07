@@ -1,6 +1,5 @@
 import IConfigFetcher from "./ConfigFetcher";
 import ICache from "./Cache";
-import * as winston from "winston";
 import { ConfigurationBase } from "./ConfigCatClientConfiguration";
 
 export class ProjectConfig {
@@ -27,7 +26,6 @@ export interface IConfigService {
 export abstract class ConfigServiceBase {
     protected configFetcher: IConfigFetcher;
     protected cache: ICache;
-    protected logger: winston.LoggerInstance;
 
     constructor(configFetcher: IConfigFetcher, cache: ICache, baseConfig: ConfigurationBase) {
 
@@ -45,7 +43,6 @@ export abstract class ConfigServiceBase {
 
         this.configFetcher = configFetcher;
         this.cache = cache;
-        this.logger = baseConfig.logger;
     }
 
     protected refreshLogicBase(lastProjectConfig: ProjectConfig, callback: (value: ProjectConfig) => void): void {

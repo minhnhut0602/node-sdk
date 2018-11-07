@@ -1,6 +1,6 @@
 {
   "name": "configcat",
-  "version": "2.0.7",
+  "version": "2.0.9",
   "description": "ConfigCat is a cloud based configuration as a service. It integrates with your apps, backends, websites, and other programs, so you can configure them through this website (https://www.configcat.com) even after they are deployed.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -22,8 +22,7 @@
   "dependencies": {
     "big-integer": "^1.6.36",
     "events": "^2.0.0",
-    "node-sha1": "^1.0.1",
-    "winston": "^2.4.2"
+    "node-sha1": "^1.0.1"
   },
   "devDependencies": {
     "@types/chai": "^4.1.6",
